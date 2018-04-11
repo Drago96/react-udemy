@@ -22,7 +22,7 @@ class App extends Component {
 
   nameChangedHandler = (event) => {
     const name = event.target.value;
-    
+
     this.changeName(name);
   }
 
@@ -38,9 +38,9 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Hi, I'm a React App</h1>
-        <button 
-        onClick={() => this.switchNameHandler("Switched!")}
-        style = {style}>Switch Name</button>
+        <button
+          onClick={() => this.switchNameHandler("Switched!")}
+          style={style}>Switch Name</button>
         <Person
           name={this.state.persons[0].name}
           age={this.state.persons[0].age}
