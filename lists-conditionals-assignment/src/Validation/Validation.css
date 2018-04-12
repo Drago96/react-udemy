@@ -1,0 +1,7 @@
+.Validation .error {
+    color: red;
+}
+
+.Validation .success {
+    color: green;
+}
