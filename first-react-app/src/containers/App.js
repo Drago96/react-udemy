@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Radium, { StyleRoot } from "radium";
 
 import classes from './App.css';
-import Person from "./Person/Person";
+import Persons from "../components/Persons/Persons";
+import Cockpit from "../components/Cockpit/Cockpit";
 
 class App extends Component {
   state = {
@@ -41,62 +42,28 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      backgroundColor: "green",
-      color: "white",
-      font: "inherit",
-      border: "1px solid blue",
-      padding: "8px",
-      cursor: "pointer",
-      ":hover": {
-        backgroundColor: "lightgreen",
-        color: "black"
-      }
-    };
-
     let persons = null;
 
     if (this.state.showPersons) {
-      persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return (
-              <Person key={person.id}
-                click={() => this.deletePersonHandler(index)}
-                name={person.name}
-                age={person.age}
-                changed={(event) => this.nameChangedHandler(event, person.id)} />
-            );
-          })}
-        </div>
-      );
-
-      style.backgroundColor = "red";
-      style[":hover"].backgroundColor = "salmon";
-    }
-
-    const assignedClasses = [];
-
-    if (this.state.persons.length < 2) {
-      assignedClasses.push(classes.red);
-    }
-
-    if (this.state.persons.length < 1) {
-      assignedClasses.push(classes.bold);
+      persons = <Persons
+        persons={this.state.persons}
+        personClicked={this.deletePersonHandler}
+        nameChanged={this.nameChangedHandler} />
     }
 
     return (
       <StyleRoot>
         <div className={classes.App}>
-          <h1>Hi, I&apos;m a React App</h1>
-          <p className={assignedClasses.join(" ")}>App working correctly</p>
-          <button
-            onClick={this.togglePersonsHandler}
-            style={style}>Toggle Persons</button>
+          <Cockpit
+            appTitle={this.props.title}
+            showPersons={this.state.showPersons}
+            personsLength={this.state.persons.length}
+            togglePersonsClicked={this.togglePersonsHandler} />
           {persons}
         </div>
       </StyleRoot>
     );
+
     // return React.createElement("div", {className: "App" },
     //   React.createElement("h1", null, "Hello React"),
     //   React.createElement("h1", null, "Bye React"),
