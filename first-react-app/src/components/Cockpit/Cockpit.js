@@ -41,6 +41,7 @@ const cockpit = (props) => {
             <button
                 onClick={props.togglePersonsClicked}
                 style={style}>Toggle Persons</button>
+            <button onClick={props.login}>Log in</button>
         </Fragment>
         // </Aux>
     );
