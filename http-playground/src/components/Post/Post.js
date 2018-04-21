@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 
 import './Post.css';
 
@@ -18,4 +19,4 @@ post.propTypes = {
     clicked: PropTypes.func.isRequired
 };
 
-export default post;
+export default withRouter(post);
