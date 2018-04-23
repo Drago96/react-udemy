@@ -16,7 +16,15 @@ class FullPost extends Component {
     }
 
     async componentDidMount() {
-        const id = this.props.match.params.id;
+        await this.loadData();
+    }
+
+    async componentDidUpdate() {
+        await this.loadData();
+    }
+
+    async loadData() {
+        const id = +this.props.match.params.id;
         if (id) {
             if (!this.state.loadedPost || (this.state.loadedPost
                 && this.state.loadedPost.id !== id)) {

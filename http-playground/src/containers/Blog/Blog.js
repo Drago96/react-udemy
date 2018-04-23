@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { Route, Switch, NavLink } from "react-router-dom";
+import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
 import Posts from "./Posts/Posts";
-import NewPost from "./NewPost/NewPost";
-import FullPost from "./FullPost/FullPost";
+import asyncComponent from "../../hoc/asyncComponent";
 import './Blog.css';
 
+const AsyncNewPost = asyncComponent(() => import("./NewPost/NewPost"));
+
 class Blog extends Component {
+    state = {
+        auth: true
+    }
+
     render() {
         return (
             <div className="Blog">
@@ -15,14 +20,13 @@ class Blog extends Component {
                         <ul>
                             <li>
                                 <NavLink
-                                    to="/"
-                                    exact
+                                    to="/posts"
                                     activeClassName="my-active"
                                     activeStyle={{
                                         color: "orange",
                                         fontWeight: "bold"
                                     }}>
-                                    Home
+                                    Posts
                                 </NavLink>
                             </li>
                             <li>
@@ -38,9 +42,10 @@ class Blog extends Component {
                     </nav>
                 </header>
                 <Switch>
-                    <Route path="/" exact component={Posts} />
-                    <Route path="/new-post" exact component={NewPost} />
-                    <Route path="/posts/:id" exact component={FullPost} />
+                    {this.state.auth ? <Route path="/new-post" exact component={AsyncNewPost} /> : null}
+                    <Route path="/posts" component={Posts} />
+                    <Redirect exact from="/" to="/posts" />
+                    <Route render={() => <h1>Not found</h1>} />
                 </Switch>
             </div >
         );
