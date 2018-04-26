@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Route } from "react-router-dom";
 
@@ -9,26 +10,8 @@ class Checkout extends Component {
     static propTypes = {
         location: PropTypes.object.isRequired,
         match: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
-    }
-
-    state = {
-        ingredients: {},
-        price: null
-    }
-
-    componentDidMount() {
-        const query = new URLSearchParams(this.props.location.search);
-        const ingredients = {};
-        let price = null;
-        for (let param of query.entries()) {
-            if(param[0] === "price") {
-                price = +param[1];
-            } else {
-                ingredients[param[0]] = +param[1];
-            }
-        }
-        this.setState({ ingredients, price });
+        history: PropTypes.object.isRequired,
+        ingredients: PropTypes.object.isRequired
     }
 
     checkoutCancelledHandler = () => {
@@ -42,14 +25,21 @@ class Checkout extends Component {
     render() {
         return (
             <div>
-                <CheckoutSummary ingredients={this.state.ingredients}
+                <CheckoutSummary ingredients={this.props.ingredients}
                     checkoutCancelled={this.checkoutCancelledHandler}
                     checkoutContinued={this.checkoutContinuedHandler} />
-                <Route 
-                path={this.props.match.path + "/contact-data"} exact render={() => <ContactData ingredients={this.state.ingredients} price={this.state.price} />} />
+                <Route
+                    path={this.props.match.path + "/contact-data"} exact 
+                    component={ContactData} />
             </div>
-            );
-        }
+        );
     }
-    
-    export default Checkout;
+}
+
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients
+    }
+};
+
+export default connect(mapStateToProps)(Checkout);

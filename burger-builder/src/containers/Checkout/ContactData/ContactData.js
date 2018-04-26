@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 import Button from "../../../components/UI/Button/Button";
 import Spinner from "../../../components/UI/Spinner/Spinner";
@@ -88,8 +89,8 @@ class ContactData extends Component {
                 elementType: "select",
                 elementConfig: {
                     options: [
-                        {value: "fastest", displayValue: "Fastest"},
-                        {value: "cheapest", displayValue: "Cheapest"}
+                        { value: "fastest", displayValue: "Fastest" },
+                        { value: "cheapest", displayValue: "Cheapest" }
                     ]
                 },
                 value: "fastest",
@@ -109,7 +110,7 @@ class ContactData extends Component {
 
         const formData = {};
 
-        for(const formElementIdentifier in this.state.orderForm) {
+        for (const formElementIdentifier in this.state.orderForm) {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
 
@@ -136,11 +137,11 @@ class ContactData extends Component {
             isValid = value.trim() !== "" && isValid;
         }
 
-        if(rules.minLength) {
+        if (rules.minLength) {
             isValid = value.length >= rules.minLength && isValid;
         }
 
-        if(rules.maxLength) {
+        if (rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid;
         }
 
@@ -151,8 +152,8 @@ class ContactData extends Component {
         const formData = {
             ...this.state.orderForm
         };
-        
-        const updatedFormElement =  {
+
+        const updatedFormElement = {
             ...formData[inputId]
         };
 
@@ -163,17 +164,17 @@ class ContactData extends Component {
         formData[inputId] = updatedFormElement;
 
         let formIsValid = true;
-        for(const inputIdentifiers in formData) {
+        for (const inputIdentifiers in formData) {
             formIsValid = formData[inputIdentifiers].valid && formIsValid;
         }
 
-        this.setState({orderForm: formData, formIsValid});
+        this.setState({ orderForm: formData, formIsValid });
     }
 
     render() {
         const formElementsArray = [];
 
-        for(const key in this.state.orderForm) {
+        for (const key in this.state.orderForm) {
             formElementsArray.push({
                 id: key,
                 config: this.state.orderForm[key]
@@ -184,14 +185,14 @@ class ContactData extends Component {
             <h4>Enter your Contact Data</h4>
             <form onSubmit={this.orderHandler}>
                 {formElementsArray.map(e => {
-                    return <Input 
-                    key={e.id} 
-                    elementType={e.config.elementType} 
-                    elementConfig={e.config.elementConfig} 
-                    value={e.config.value}
-                    invalid={!e.config.valid}
-                    shouldValidate={e.config.touched}
-                    changed={(event) => this.inputChangedHandler(event, e.id)} />
+                    return <Input
+                        key={e.id}
+                        elementType={e.config.elementType}
+                        elementConfig={e.config.elementConfig}
+                        value={e.config.value}
+                        invalid={!e.config.valid}
+                        shouldValidate={e.config.touched}
+                        changed={(event) => this.inputChangedHandler(event, e.id)} />
                 })}
                 <Button
                     btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
@@ -206,4 +207,11 @@ class ContactData extends Component {
     }
 }
 
-export default withRouter(ContactData);
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        price: state.price
+    }
+};
+
+export default connect(mapStateToProps)(withRouter(ContactData));
