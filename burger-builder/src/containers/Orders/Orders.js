@@ -1,41 +1,24 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import Order from "../../components/Order/Order";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
+import * as actions from "../../store/actions/index";
 
 class Orders extends Component {
-    state = {
-        orders: [],
-        loading: true
-    }
-
-    async componentDidMount() {
-        try {
-            const response = await axios.get("/orders.json");
-            const fetchedOrders = [];
-            for (let key in response.data) {
-                fetchedOrders.push({
-                    ...response.data[key],
-                    id: key
-                });
-            }
-            this.setState({ orders: fetchedOrders });
-        } catch (e) {
-            console.log(e);
-        } finally {
-            this.setState({ loading: false });
-        }
+    componentDidMount() {
+        this.props.onFetchOrders();
     }
 
     render() {
-        let orders = this.state.orders.map(o => (
-            <Order key={o.id} ingredients={o.ingredients} price={+o.price}  />
-        ));
+        let orders = <Spinner />; 
 
-        if(this.state.loading) {
-            orders = <Spinner />;
+        if (!this.props.loading) {
+            orders = this.props.orders.map(o => (
+                <Order key={o.id} ingredients={o.ingredients} price={+o.price} />
+            ));
         }
 
         return (
@@ -46,4 +29,17 @@ class Orders extends Component {
     }
 }
 
-export default withErrorHandler(Orders, axios);
+const mapDispatchToProps = dispatch => {
+    return {
+        onFetchOrders: () => dispatch(actions.fetchOrders())
+    };
+};
+
+const mapStateToProps = state => {
+    return {
+        loading: state.order.loading,
+        orders: state.order.orders
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));
