@@ -1,11 +1,11 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-orders";
 
-export const purchaseBurger = (order) => {
+export const purchaseBurger = (order, token) => {
     return async dispatch => {
         dispatch(purchaseBurgerStart());
         try {
-            const response = await axios.post("/orders.json", order);
+            const response = await axios.post("/orders.json?auth=" + token, order);
             dispatch(purchaseBurgerSuccess(response.data.name, order));
         } catch (e) {
             dispatch(purchaseBurgerFail(e));
@@ -40,11 +40,12 @@ export const purchaseBurgerFail = (error) => {
     };
 };
 
-export const fetchOrders = () => {
+export const fetchOrders = (token, userId) => {
     return async dispatch => {
         try {
             dispatch(fetchOrdersStart());
-            const response = await axios.get("/orders.json");
+            const queryParams = "auth=" + token + `&orderBy="userId"&equalTo="` + userId + `"`;
+            const response = await axios.get("/orders.json?" + queryParams);
             const fetchedOrders = [];
             for (let key in response.data) {
                 fetchedOrders.push({
