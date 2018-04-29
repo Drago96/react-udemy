@@ -1,13 +1,11 @@
 import * as actionTypes from "../actions/actionTypes";
-import { getUserData } from "../utilities";
 
 const initialState = {
     token: null,
     userId: null,
     error: null,
     loading: false,
-    authRedirectPath: "/",
-    ...getUserData()
+    authRedirectPath: "/"
 };
 
 const reducer = (state = initialState, action) => {

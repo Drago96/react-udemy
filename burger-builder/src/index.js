@@ -11,6 +11,7 @@ import registerServiceWorker from './registerServiceWorker';
 import burgerBuilderReducer from "./store/reducers/burgerBuilder";
 import orderReducer from "./store/reducers/order";
 import authReducer from "./store/reducers/auth";
+import * as actions from "./store/actions/index";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -24,6 +25,8 @@ const store = createStore(rootReducer,
     composeEnhancers(
         applyMiddleware(thunk)
     ));
+
+store.dispatch(actions.setUserData());
 
 const app = (
     <Provider store={store}>

@@ -1,10 +1,11 @@
 import axios from "axios";
 
 import * as actionTypes from "./actionTypes";
-import { clearUserStorage } from "../utilities";
 
 export const logout = () => {
-    clearUserStorage();
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("expirationDate");
 
     return {
         type: actionTypes.AUTH_LOGOUT
@@ -76,4 +77,23 @@ export const setAuthRedirectPath = (path) => {
         path
     }
 };
+
+export const setUserData = () => {
+    return dispatch => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            dispatch(logout());
+        } else {
+            const expirationDate = new Date(localStorage.getItem("expirationDate"));
+            if (expirationDate <= new Date()) {
+                dispatch(logout());
+            } else {
+                const userId = localStorage.getItem("userId");
+                dispatch(authSuccess(token, userId));
+            }
+        }
+    }
+}
+
+
 
